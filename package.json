@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha",
+    "spec": "./node_modules/mocha/bin/mocha -R  spec"
   },
-  "author": "",
-  "license": "BSD-2-Clause",
+  "author": {
+    "name": "Brent Burgoyne",
+    "url": "http://brentburgoyne.com"
+  },
+  "license": "MIT",
   "devDependencies": {
     "mocha": "~1.13.0",
-    "expect.js": "~0.2.0"
+    "expect.js": "~0.2.0",
+    "underscore": "~1.5.2"
   }
 }
