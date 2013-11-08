@@ -2,12 +2,13 @@
 /*global describe:true,it:true */
 'use strict';
 
-var expect = require('expect.js')
-  , Segment  = require('../trailmap').Segment;
+var expect   = require('expect.js')
+  , Segment  = require('../trailmap').Segment
+  , _        = require('underscore');
 
 describe('Segment', function() {
   it(
-    'should be optional only if part begins with a question mark', 
+    'should be optional only if part begins with a question mark',
     function() {
       var seg1 = new Segment('?test')
         , seg2 = new Segment('test');
@@ -16,7 +17,7 @@ describe('Segment', function() {
     }
   );
   it(
-    'should base param name on string after the colon', 
+    'should base param name on string after the colon',
     function() {
       var seg1 = new Segment('?test:param')
         , seg2 = new Segment(':test')
@@ -27,7 +28,7 @@ describe('Segment', function() {
     }
   );
   it(
-    'should get prefix from the string before :param and after ?', 
+    'should get prefix from the string before :param and after ?',
     function() {
       var seg1 = new Segment('?prefix:param')
         , seg2 = new Segment('prefix');
@@ -46,9 +47,9 @@ describe('Segment', function() {
         '&asdfa',
         'asdf?'
       ];
-      invalidParts.forEach(function(part) {
+      _(invalidParts).each(function(part) {
         expect(function(){
-          var seg = new Segment(part); 
+          var seg = new Segment(part);
         }).to.throwError(function(err) {
           expect(err).to.be.a(Error);
         });
@@ -56,7 +57,7 @@ describe('Segment', function() {
     }
   );
 
-  describe('test method', function() {
+  describe('test prototype method', function() {
     
     it(
       'should match segments without parameters',
@@ -82,7 +83,7 @@ describe('Segment', function() {
 
   });
 
-  describe('build method', function() {
+  describe('build prototype method', function() {
     
     it(
       'should return the prefix for segements without a param',
