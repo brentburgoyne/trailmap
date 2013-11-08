@@ -72,12 +72,10 @@
       , valid = true
       , i     = -1;
     Route.split(path, function(part) {
-      var next      = true
-        , partValid = true;
-      while (_this.segments[++i] && next) {
-        partValid = _this.segments[i].test(part);
-        next = !partValid;
-        if (!next && !_this.segments[i].optional) {
+      var partValid = false;
+      while (_this.segments[++i] && !partValid) {
+        partValid = _this.segments[i].test(part, params);
+        if (partValid) {
           i--;
         }
       }
@@ -90,18 +88,19 @@
   Route.prototype.path = function(params) {
     params = params || {};
     var parts = []
-      , len   = this.segments
+      , len   = this.segments.length
       , i     = -1;
     while (++i < len) {
       var segment = this.segments[i];
       if (segment.param) {
-        if (params[segment.name] || !segment.optional) {
-          parts.push(String(params[segment.name]));
+        if (params[segment.param] || !segment.optional) {
+          parts.push(segment.prefix + String(params[segment.param]));
         }
       } else {
-        parts.push(segment.name);
+        parts.push(segment.prefix);
       }
     }
+    return parts.join('/');
   };
 
   // Constructs a new TrailMap object. An optional cutrom getUrl function can be
@@ -128,6 +127,7 @@
     var url       = this.getUrl()
       , len       = this.routes.length
       , i         = -1
+      , route
       , params;
     while (++i < len) {
       params = {};
@@ -135,9 +135,11 @@
         this.matched = true;
         this.args.unshift(params);
         this.routes[i].callback.apply(null, this.args);
+        route = this.routes[i];
         break;
       }
     }
+    return route;
   };
 
   // Add one or more routes in the format of name, pattern, callback. The three
@@ -148,9 +150,9 @@
       , i     = -1
       , route;
     while (++i < count) {
-      route = new Route(args[2*i+1], args[2*i+2]);
+      route = new Route(args[3*i+1], args[3*i+2]);
       this.routes.push(route);
-      this.namedRoutes[args[2*i]] = route;
+      this.namedRoutes[args[3*i]] = route;
     }
   };
 
